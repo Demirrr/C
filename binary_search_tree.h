@@ -5,16 +5,16 @@
 
 // Define the structure for a single node in the BST.
 // Each node has an integer data value and pointers to its left and right children.
-typedef struct Node {
+typedef struct TNode {
     int data;
-    struct Node* left;
-    struct Node* right;
-} Node;
+    struct TNode* left;
+    struct TNode* right;
+} TNode;
 
 // Define the structure for the Binary Search Tree.
 // It simply holds a pointer to the root node of the tree.
 typedef struct BST {
-    Node* root;
+    TNode* root;
 } BST;
 
 // Function prototypes for BST operations.
@@ -40,28 +40,28 @@ void insert(BST* bst, int data);
  * @param data The integer data to search for.
  * @return A pointer to the node containing the data, or NULL if not found.
  */
-Node* search(const BST* bst, int data);
+TNode* search(const BST* bst, int data);
 
 /**
  * @brief Performs an In-order traversal of the tree.
  * The output will be the data in ascending sorted order.
  * @param node The current node to start the traversal from. Use the root node to traverse the whole tree.
  */
-void inorder_traversal(Node* node);
+void inorder_traversal(TNode* node);
 
 /**
  * @brief Performs a Pre-order traversal of the tree.
  * The output is root -> left -> right.
  * @param node The current node to start the traversal from. Use the root node to traverse the whole tree.
  */
-void preorder_traversal(Node* node);
+void preorder_traversal(TNode* node);
 
 /**
  * @brief Performs a Post-order traversal of the tree.
  * The output is left -> right -> root.
  * @param node The current node to start the traversal from. Use the root node to traverse the whole tree.
  */
-void postorder_traversal(Node* node);
+void postorder_traversal(TNode* node);
 
 /**
  * @brief Deallocates all memory used by the Binary Search Tree.

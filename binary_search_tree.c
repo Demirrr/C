@@ -3,8 +3,8 @@
 #include "binary_search_tree.h"
 
 // Helper function to create a new node.
-static Node* create_node(int data) {
-    Node* newNode = (Node*)malloc(sizeof(Node));
+static TNode* create_node(int data) {
+    TNode* newNode = (TNode*)malloc(sizeof(TNode));
     if (newNode == NULL) {
         fprintf(stderr, "Error: Memory allocation failed for new node.\n");
         return NULL;
@@ -16,7 +16,7 @@ static Node* create_node(int data) {
 }
 
 // Helper function to insert a node recursively.
-static Node* insert_recursive(Node* node, int data) {
+static TNode* insert_recursive(TNode* node, int data) {
     // Base case: If the tree is empty or we've found an empty spot, create and return a new node.
     if (node == NULL) {
         return create_node(data);
@@ -54,7 +54,7 @@ void insert(BST* bst, int data) {
 }
 
 // Helper function to search for a node recursively.
-static Node* search_recursive(Node* node, int data) {
+static TNode* search_recursive(TNode* node, int data) {
     // Base case 1: Node is NULL, meaning the value was not found.
     if (node == NULL) {
         return NULL;
@@ -74,7 +74,7 @@ static Node* search_recursive(Node* node, int data) {
 }
 
 // Searches for a value in the BST.
-Node* search(const BST* bst, int data) {
+TNode* search(const BST* bst, int data) {
     if (bst == NULL) {
         return NULL;
     }
@@ -82,7 +82,7 @@ Node* search(const BST* bst, int data) {
 }
 
 // Performs an In-order traversal (Left, Root, Right).
-void inorder_traversal(Node* node) {
+void inorder_traversal(TNode* node) {
     if (node != NULL) {
         inorder_traversal(node->left);
         printf("%d ", node->data);
@@ -91,7 +91,7 @@ void inorder_traversal(Node* node) {
 }
 
 // Performs a Pre-order traversal (Root, Left, Right).
-void preorder_traversal(Node* node) {
+void preorder_traversal(TNode* node) {
     if (node != NULL) {
         printf("%d ", node->data);
         preorder_traversal(node->left);
@@ -100,7 +100,7 @@ void preorder_traversal(Node* node) {
 }
 
 // Performs a Post-order traversal (Left, Right, Root).
-void postorder_traversal(Node* node) {
+void postorder_traversal(TNode* node) {
     if (node != NULL) {
         postorder_traversal(node->left);
         postorder_traversal(node->right);
@@ -109,7 +109,7 @@ void postorder_traversal(Node* node) {
 }
 
 // Helper function to destroy the tree recursively using post-order traversal.
-static void destroy_tree_recursive(Node* node) {
+static void destroy_tree_recursive(TNode* node) {
     if (node != NULL) {
         destroy_tree_recursive(node->left);
         destroy_tree_recursive(node->right);

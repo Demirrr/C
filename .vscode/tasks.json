@@ -6,7 +6,7 @@
             "command": "bash",
             "args": [
                 "-c",
-                "/usr/bin/gcc -fdiagnostics-color=always -g main.c singly_linked_list.c queue.c stack.c binary_search_tree.c -o main && chmod +x main"
+            "/usr/bin/gcc -fdiagnostics-color=always -g main.c singly_linked_list.c queue.c stack.c binary_search_tree.c doubly_linked_list.c -o main && chmod +x main"
             ],
             "options": {
                 "cwd": "${fileDirname}"
