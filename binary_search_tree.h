@@ -9,6 +9,7 @@ typedef struct TNode {
     int data;
     struct TNode* left;
     struct TNode* right;
+    int height; // height of the node for AVL balancing
 } TNode;
 
 // Define the structure for the Binary Search Tree.
@@ -68,6 +69,12 @@ void postorder_traversal(TNode* node);
  * @param bst The BST to destroy.
  */
 void destroy_tree(BST* bst);
+
+/**
+ * @brief Deletes a subtree given its root node.
+ * @param node The root node of the subtree to delete.
+ */
+void delete_subtree(TNode* node);
 
 #endif // BINARY_SEARCH_TREE_H
 

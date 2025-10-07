@@ -32,4 +32,4 @@ This project demonstrates the implementation and usage of fundamental data struc
 To compile all data structures and the demo:
 
 ```sh
-gcc [main.c](http://_vscodecontentref_/1) singly_linked_list.c stack.c queue.c binary_search_tree.c -o data_structures_demo
+gcc main.c singly_linked_list.c stack.c queue.c binary_search_tree.c -o data_structures_demo

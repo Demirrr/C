@@ -132,7 +132,7 @@ void demonstrate_binary_search_tree() {
     postorder_traversal(bst->root);
     printf("\n");
     int search_val = 40;
-    Node* found = search(bst, search_val);
+    TNode* found = search(bst, search_val);
     if (found) printf("Found %d in BST.\n", search_val);
     else printf("%d not found in BST.\n", search_val);
     destroy_tree(bst);
