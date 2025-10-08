@@ -8,6 +8,7 @@ gcc -g main.c singly_linked_list.c queue.c stack.c binary_search_tree.c doubly_l
 #include "queue.h"
 #include "doubly_linked_list.h"
 #include "binary_search_tree.h"
+#include "avl_tree.h"
 
 void demonstrate_singly_linked_list() {
     printf("--- Singly Linked List Demonstration ---\n");
@@ -139,12 +140,44 @@ void demonstrate_binary_search_tree() {
     printf("BST destroyed.\n\n");
 }
 
+void demonstrate_avl_tree() {
+    printf("--- AVL Tree Demonstration (self-balancing) ---\n");
+    AVLTree* tree = avl_init();
+    if (tree == NULL) {
+        printf("Failed to initialize AVL tree. Exiting.\n");
+        return;
+    }
+    avl_insert(tree, 50);
+    avl_insert(tree, 30);
+    avl_insert(tree, 70);
+    avl_insert(tree, 20);
+    avl_insert(tree, 40);
+    avl_insert(tree, 60);
+    avl_insert(tree, 80);
+    printf("Inorder traversal (should be sorted): ");
+    avl_inorder_traversal(tree->root);
+    printf("\n");
+    printf("Preorder traversal: ");
+    avl_preorder_traversal(tree->root);
+    printf("\n");
+    printf("Postorder traversal: ");
+    avl_postorder_traversal(tree->root);
+    printf("\n");
+    int search_val = 40;
+    AVLNode* found = avl_search(tree, search_val);
+    if (found) printf("Found %d in AVL tree.\n", search_val);
+    else printf("%d not found in AVL tree.\n", search_val);
+    avl_destroy_tree(tree);
+    printf("AVL tree destroyed.\n\n");
+}
+
 int main() {
     demonstrate_singly_linked_list();
     demonstrate_doubly_linked_list();
     demonstrate_stack();
     demonstrate_queue();
     demonstrate_binary_search_tree();
+    demonstrate_avl_tree();
     return 0;
 }
 
