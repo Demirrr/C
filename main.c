@@ -2,6 +2,8 @@
 gcc -g main.c singly_linked_list.c queue.c stack.c binary_search_tree.c doubly_linked_list.c -o main && ./main
 */
 #include <stdio.h>
+#include <stddef.h>
+#include <stdlib.h>
 
 #include "singly_linked_list.h"
 #include "stack.h"
@@ -9,6 +11,126 @@ gcc -g main.c singly_linked_list.c queue.c stack.c binary_search_tree.c doubly_l
 #include "doubly_linked_list.h"
 #include "binary_search_tree.h"
 #include "avl_tree.h"
+
+
+// This works only for arrays whose size is known at compile time (i.e., not pointers).
+// compile-time trick to ensure arr is not a pointer
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]))
+// Helper for singly linked list insertion sort
+Node* insertion_sort_list(Node* head) {
+    if (!head || !head->next) return head;
+    Node* sorted = NULL;
+    Node* curr = head;
+    while (curr) {
+        Node* next = curr->next;
+        if (!sorted || curr->data < sorted->data) {
+            curr->next = sorted;
+            sorted = curr;
+        } else {
+            Node* s = sorted;
+            while (s->next && s->next->data < curr->data) s = s->next;
+            curr->next = s->next;
+            s->next = curr;
+        }
+        curr = next;
+    }
+    return sorted;
+}
+
+// Helper for doubly linked list insertion sort
+DNode* insertion_sort_dlist(DNode* head) {
+    if (!head) return NULL;
+    DNode* curr = head->next;
+    while (curr) {
+        DNode* next = curr->next;
+        DNode* pos = curr->prev;
+        while (pos && pos->data > curr->data) pos = pos->prev;
+        if ((curr->prev && pos != curr->prev) || (!curr->prev && pos)) {
+            // Remove curr
+            if (curr->prev) curr->prev->next = curr->next;
+            if (curr->next) curr->next->prev = curr->prev;
+            // Insert after pos
+            if (!pos) {
+                // Insert at head
+                curr->next = head;
+                curr->prev = NULL;
+                head->prev = curr;
+                head = curr;
+            } else {
+                curr->next = pos->next;
+                curr->prev = pos;
+                if (pos->next) pos->next->prev = curr;
+                pos->next = curr;
+            }
+        }
+        curr = next;
+    }
+    return head;
+}
+// Function prototype for print_array
+void print_array(int arr[], int n) {
+    for (int i = 0; i < n; i++) {
+        printf("%d ", arr[i]);
+    }
+    printf("\n");
+}
+// Bubble Sort implementation with verbosity and comments
+// arr: the array to sort
+// n: number of elements in the array
+// reverse: if true, sort in descending order; otherwise ascending
+// verbose: if true, print array after each swap; if false, suppress inner loop printing
+void bubble_sort(int arr[], int n, bool reverse, bool verbose) {
+    printf("Original array: ");
+    print_array(arr, n);
+
+    // Outer loop for each pass
+    for (int i = 0; i < n-1; i++) {
+        // Inner loop for pairwise comparison
+        for (int j = 0; j < n-i-1; j++) {
+            // Compare adjacent elements and swap if out of order
+            if (reverse ? arr[j] < arr[j+1] : arr[j] > arr[j+1]) {
+                int temp = arr[j];
+                arr[j] = arr[j+1];
+                arr[j+1] = temp;
+            }
+            // Print array after each swap if verbose is true
+            if (verbose) {
+                printf("Array after swap: ");
+                print_array(arr, n);
+                printf("\n");
+            }
+        }
+    }
+    printf("Sorted array : ");
+    print_array(arr, n);
+    printf("\n");
+}
+// Insertion Sort implementation
+void insertion_sort(int arr[], int n, bool reverse, bool verbose) {
+    printf("--- Insertion Sort Demonstration (Array) ---\n");
+    printf("Original array : ");
+    print_array(arr, n);
+    for (int i = 1; i < n; i++) {
+        int key = arr[i];
+        int j = i - 1;
+        while (j >= 0 && (reverse ? arr[j] < key : arr[j] > key)) {
+            arr[j + 1] = arr[j];
+            j--;
+        }
+        arr[j + 1] = key;
+        // Print array after each swap if verbose is true
+        if (verbose) {
+            printf("Array after swap: ");
+            print_array(arr, n);
+            printf("\n");
+        }
+    }
+    printf("Sorted array : ");
+    print_array(arr, n);
+    printf("\n");
+}
+
+
 
 void demonstrate_singly_linked_list() {
     printf("--- Singly Linked List Demonstration ---\n");
@@ -39,6 +161,27 @@ void demonstrate_singly_linked_list() {
     print_list(list);
     destroy_list(list);
     printf("Linked list destroyed.\n\n");
+
+        // Insertion Sort for Singly Linked List
+    printf("--- Insertion Sort Demonstration (Singly Linked List) ---\n");
+    LinkedList* llist = init_list();
+    insert_at_end(llist, 29);
+    insert_at_end(llist, 10);
+    insert_at_end(llist, 14);
+    insert_at_end(llist, 37);
+    insert_at_end(llist, 13);
+    insert_at_end(llist, 5);
+    insert_at_end(llist, 7);
+    insert_at_end(llist, 18);
+    insert_at_end(llist, 2);
+    insert_at_end(llist, 11);
+    printf("Original list: ");
+    print_list(llist);
+    llist->head = insertion_sort_list(llist->head);
+    printf("Sorted list : ");
+    print_list(llist);
+    destroy_list(llist);
+    printf("\n");
 }
 
 void demonstrate_doubly_linked_list() {
@@ -75,6 +218,27 @@ void demonstrate_doubly_linked_list() {
     dll_print_backward(dlist);
     dll_destroy_list(dlist);
     printf("Doubly linked list destroyed.\n\n");
+
+        // Insertion Sort for Doubly Linked List
+    printf("--- Insertion Sort Demonstration (Doubly Linked List) ---\n");
+    DoublyLinkedList* ddlist = dll_init_list();
+    dll_insert_at_end(ddlist, 29);
+    dll_insert_at_end(ddlist, 10);
+    dll_insert_at_end(ddlist, 14);
+    dll_insert_at_end(ddlist, 37);
+    dll_insert_at_end(ddlist, 13);
+    dll_insert_at_end(ddlist, 5);
+    dll_insert_at_end(ddlist, 7);
+    dll_insert_at_end(ddlist, 18);
+    dll_insert_at_end(ddlist, 2);
+    dll_insert_at_end(ddlist, 11);
+    printf("Original doubly list: ");
+    dll_print_forward(ddlist);
+    ddlist->head = insertion_sort_dlist(ddlist->head);
+    printf("Sorted doubly list : ");
+    dll_print_forward(ddlist);
+    dll_destroy_list(ddlist);
+    printf("\n");
 }
 
 void demonstrate_stack() {
@@ -109,6 +273,7 @@ void demonstrate_queue() {
     if (dequeue(&queue, &value) == false) printf("Successfully prevented queue underflow!!.\n\n");
 }
 
+
 void demonstrate_binary_search_tree() {
     printf("--- Binary Search Tree Demonstration ---\n");
     BST* bst = init_bst();
@@ -139,6 +304,20 @@ void demonstrate_binary_search_tree() {
     destroy_tree(bst);
     printf("BST destroyed.\n\n");
 }
+
+
+void demonstrate_sorts() {
+    int arr1[10] = {29, 10, 14, 37, 13, 5, 7, 18, 2, 11};
+    int n1 = ARRAY_SIZE(arr1);
+    insertion_sort(arr1, n1, false, false); // Pass true for verbose demonstration
+
+    insertion_sort(arr1, n1, true, false); // Pass true for verbose demonstration
+    
+    printf("--- Bubble Sort Demonstration (Array) ---\n");
+    int arr2[10] = {291, 10, 14, 37, 13, 5, 7, 18, 2, 11};
+    int n2 = ARRAY_SIZE(arr2);
+    bubble_sort(arr2, n2, false, false); // Pass true for verbose demonstration
+    }
 
 void demonstrate_avl_tree() {
     printf("--- AVL Tree Demonstration (self-balancing) ---\n");
@@ -171,6 +350,7 @@ void demonstrate_avl_tree() {
     printf("AVL tree destroyed.\n\n");
 }
 
+
 int main() {
     demonstrate_singly_linked_list();
     demonstrate_doubly_linked_list();
@@ -178,6 +358,7 @@ int main() {
     demonstrate_queue();
     demonstrate_binary_search_tree();
     demonstrate_avl_tree();
+    demonstrate_sorts();
     return 0;
 }
 
