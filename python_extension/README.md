@@ -1,131 +1,211 @@
-# Python C Extension Example
+# Python Extensions Tutorial
 
-A comprehensive, well-documented example of creating Python classes in C using the Python/C API. This project serves as both a working implementation and an educational resource for understanding Python C extensions.
+A comprehensive guide to creating Python extensions in both C and C++.
 
-## 📚 Project Files
+## Overview
+
+This repository contains examples and tutorials for building Python extensions using:
+- **C Extensions** - Using the Python/C API
+- **C++ Extensions** - Using C++ with the Python/C API
+
+Python extensions allow you to:
+- Write performance-critical code in C/C++
+- Interface with existing C/C++ libraries
+- Bypass the Global Interpreter Lock (GIL) for parallel processing
+- Implement custom types and data structures efficiently
+
+## Repository Structure
+
+```
+python_extension/
+├── c_extension/           # C-based Python extensions
+│   └── counter/          # Simple counter implementation in C
+│       ├── countermodule.c
+│       ├── setup.py
+│       ├── test_counter.py
+│       └── README.md
+│
+├── cpp_extensions/        # C++-based Python extensions
+│   └── threadcounter/    # Thread-safe counter implementation in C++
+│       ├── threadcounter.cpp
+│       ├── setup.py
+│       ├── test_threadcounter.py
+│       └── README.md
+│
+├── ARCHITECTURE.md        # Deep dive into extension architecture
+├── TUTORIAL.md           # Step-by-step tutorial for beginners
+├── QUICK_REFERENCE.md    # Quick reference guide
+└── INDEX.md              # Documentation index
+```
+
+## 📚 Documentation Files
 
 | File | Purpose |
 |------|---------|
-| `countermodule.c` | **Main C extension** - Heavily documented with 7 clear sections |
-| `TUTORIAL.md` | **Deep dive tutorial** - Architecture, patterns, and advanced topics |
-| `test_counter.py` | **Comprehensive tests** - Demonstrates all features with explanations |
-| `setup.py` | Build configuration for setuptools |
+| `ARCHITECTURE.md` | Deep dive into extension architecture and design patterns |
+| `TUTORIAL.md` | Step-by-step tutorial for beginners |
+| `QUICK_REFERENCE.md` | Quick reference for common tasks |
+| `INDEX.md` | Complete documentation index |
 | `Makefile` | Convenient build commands |
 
-## 🎯 What This Demonstrates
+## Getting Started
 
-The Counter class showcases essential Python C extension concepts:
+### Prerequisites
 
-### Core Concepts
+- Python 3.x with development headers
+- GCC or Clang compiler
+- Make (optional, for Makefile-based builds)
+
+### Quick Start
+
+1. **C Extension (Counter)**
+   ```bash
+   cd c_extension/counter
+   python setup.py develop
+   python test_counter.py
+   ```
+
+2. **C++ Extension (Thread Counter)**
+   ```bash
+   cd cpp_extensions/threadcounter
+   python setup.py develop
+   python test_threadcounter.py
+   ```
+
+## Examples
+
+### C Extension Example
+
+The counter module demonstrates:
+- Basic Python/C API usage
+- Custom type definition
+- Method implementation
+- Memory management
+
+```python
+from counter import Counter
+
+c = Counter()
+c.increment()
+print(c.value())  # Output: 1
+```
+
+### C++ Extension Example
+
+The threadcounter module demonstrates:
+- C++ integration with Python
+- Thread-safe operations using mutexes
+- Object-oriented design in extensions
+- Advanced memory management
+
+```python
+from threadcounter import ThreadCounter
+
+tc = ThreadCounter()
+tc.increment()
+print(tc.value())  # Output: 1
+```
+
+## 🎯 What These Extensions Demonstrate
+
+### Core Concepts (Both C and C++)
 - ✅ **Object Lifecycle**: `__new__`, `__init__`, and `__del__` implementation
-- ✅ **Method Implementation**: Exposing C functions as Python methods
-- ✅ **Attribute Access**: Direct access to C struct members from Python
-- ✅ **Argument Parsing**: Converting Python arguments to C types
+- ✅ **Method Implementation**: Exposing C/C++ functions as Python methods
+- ✅ **Attribute Access**: Direct access to C/C++ struct/class members from Python
+- ✅ **Argument Parsing**: Converting Python arguments to C/C++ types
 - ✅ **Reference Counting**: Proper memory management
-- ✅ **Type Definition**: Creating Python types from C structs
+- ✅ **Type Definition**: Creating Python types from C structs or C++ classes
 
-### Python Equivalent
-
-```python
-class Counter:
-    def __init__(self, initial_value=0, step=1):
-        self.count = initial_value
-        self.step = step
-    
-    def increment(self):
-        self.count += self.step
-    
-    def decrement(self):
-        self.count -= self.step
-    
-    def get_count(self):
-        return self.count
-    
-    def reset(self):
-        self.count = 0
-    
-    def set_step(self, new_step):
-        self.step = new_step
-```
-
-## 🚀 Quick Start
-
-### 1. Build the Extension
-
-```bash
-# Recommended: Build in-place for development
-make build
-# OR: python3 setup.py build_ext --inplace
-
-# Alternative: Install system-wide
-make install
-# OR: python3 setup.py install --user
-```
-
-### 2. Run Tests
-
-```bash
-make test
-# OR: python3 test_counter.py
-```
-
-### 3. Use in Python
-
-After building, import and use the Counter class:
-
-```python
-import countermodule
-
-# Create a counter starting at 10 with step 5
-counter = countermodule.Counter(10, 5)
-
-print(f"Initial count: {counter.get_count()}")  # 10
-
-counter.increment()
-print(f"After increment: {counter.get_count()}")  # 15
-
-counter.decrement()
-print(f"After decrement: {counter.get_count()}")  # 10
-
-# Access attributes directly
-print(f"Current count: {counter.count}")  # 10
-print(f"Current step: {counter.step}")    # 5
-
-counter.set_step(2)
-counter.increment()
-print(f"After changing step: {counter.get_count()}")  # 12
-
-counter.reset()
-print(f"After reset: {counter.get_count()}")  # 0
-```
+### Advanced Concepts (C++)
+- ✅ **Thread Safety**: Using mutexes for thread-safe operations
+- ✅ **C++ Integration**: Wrapping C++ classes for Python
+- ✅ **RAII Patterns**: Resource management using C++ idioms
 
 ## 📖 Learning Path
 
-### 1. Start Here: Read the Code
-Open `countermodule.c` and read through the **7 sections**:
-1. Type Definition (the struct)
-2. Object Lifecycle (`__new__`, `__init__`, `__del__`)
-3. Counter Methods (the actual functionality)
-4. Method and Member Tables (exposing to Python)
-5. Type Object Definition (the "class")
-6. Module Definition (the import)
-7. Module Initialization (tying it all together)
+### 1. Start with C Extension
+Begin with `c_extension/counter/` to understand:
+- Basic Python/C API
+- Type definitions and method tables
+- Memory management fundamentals
+- Module initialization
 
-### 2. Deep Dive: Tutorial
-Read `TUTORIAL.md` for:
-- Architecture diagrams
-- Reference counting explained
-- Argument parsing formats
-- Common patterns and pitfalls
-- Advanced topics (properties, comparisons, etc.)
+### 2. Progress to C++ Extension
+Move to `cpp_extensions/threadcounter/` to learn:
+- C++ class wrapping
+- Thread safety considerations
+- Advanced patterns and practices
 
-### 3. Practice: Modify and Extend
+### 3. Deep Dive: Read the Documentation
+- **`TUTORIAL.md`** - Architecture, patterns, and advanced topics
+- **`ARCHITECTURE.md`** - In-depth architecture and design patterns
+- **`QUICK_REFERENCE.md`** - Quick reference for common tasks
+
+### 4. Practice: Modify and Extend
 Try these exercises:
-- Add a `multiply()` method
-- Add input validation (reject negative steps)
-- Implement `__repr__` and `__str__`
-- Add comparison operators (`<`, `==`, etc.)
-- Make it thread-safe with GIL management
+- Add new methods to existing extensions
+- Create your own extension from scratch
+- Implement thread-safe operations
+- Add input validation and error handling
+- Implement special Python methods (`__repr__`, `__str__`, comparison operators)
+
+## Key Concepts
+
+### Python/C API
+- Reference counting and memory management
+- Type objects and method definitions
+- Module initialization
+- Error handling
+
+### Building Extensions
+- Using `setup.py` with `setuptools`
+- Compiler flags and options
+- Development mode installation
+- Distribution and packaging
+
+### Best Practices
+- Proper reference counting (Py_INCREF/Py_DECREF)
+- Error handling with PyErr_*
+- Thread safety considerations
+- Memory leak prevention
+
+## Common Patterns
+
+### 1. Creating a New Type
+```c
+static PyTypeObject MyType = {
+    PyVarObject_HEAD_INIT(NULL, 0)
+    .tp_name = "mymodule.MyType",
+    .tp_basicsize = sizeof(MyObject),
+    .tp_flags = Py_TPFLAGS_DEFAULT,
+    .tp_new = MyType_new,
+    .tp_dealloc = (destructor)MyType_dealloc,
+    .tp_methods = MyType_methods,
+};
+```
+
+### 2. Defining Methods
+```c
+static PyMethodDef MyType_methods[] = {
+    {"method_name", (PyCFunction)method_func, METH_NOARGS, "docstring"},
+    {NULL}
+};
+```
+
+### 3. Module Initialization
+```c
+static struct PyModuleDef mymodule = {
+    PyModuleDef_HEAD_INIT,
+    "mymodule",
+    "module docstring",
+    -1,
+    NULL
+};
+
+PyMODINIT_FUNC PyInit_mymodule(void) {
+    // Module initialization code
+}
+```
 
 ## 🔑 Key Concepts Reference
 
@@ -142,6 +222,32 @@ Try these exercises:
 | `Py_INCREF`/`Py_DECREF` | Reference counting for memory management |
 | `Py_RETURN_NONE` | Returns None (with proper refcount) |
 
+## Performance Tips
+
+1. **Minimize Python/C boundary crossings** - Batch operations when possible
+2. **Release the GIL** - Use `Py_BEGIN_ALLOW_THREADS` for CPU-bound work
+3. **Use efficient data structures** - Leverage C/C++ data structures
+4. **Profile your code** - Use cProfile and memory profilers
+5. **Consider Cython** - For simpler cases, Cython may be easier
+
+## Debugging
+
+### Building with Debug Symbols
+```bash
+python setup.py build_ext --inplace --debug
+```
+
+### Using GDB
+```bash
+gdb python
+(gdb) run test_counter.py
+```
+
+### Memory Leak Detection
+```bash
+valgrind --leak-check=full python test_counter.py
+```
+
 ## 🛠️ Build Commands
 
 ```bash
@@ -151,24 +257,17 @@ make clean           # Remove build artifacts
 make help            # Show all available commands
 ```
 
-## 📚 Documentation Suite
+## Resources
 
-This project includes comprehensive documentation for all skill levels:
-
-| Document | Size | Best For | Contents |
-|----------|------|----------|----------|
-| **[README.md](README.md)** (this file) | 5KB | Getting started | Quick start, overview, basic usage |
-| **[INDEX.md](INDEX.md)** | 8KB | Navigation | Complete documentation guide and finder |
-| **[TUTORIAL.md](TUTORIAL.md)** | 14KB | Learning concepts | Architecture, patterns, reference counting, advanced topics |
-| **[QUICK_REFERENCE.md](QUICK_REFERENCE.md)** | 11KB | Development | API cheat sheet, format codes, common patterns |
-| **[ARCHITECTURE.md](ARCHITECTURE.md)** | 28KB | Visual learners | Diagrams, flows, memory layouts, complete architecture |
-| **[REFACTORING_SUMMARY.md](REFACTORING_SUMMARY.md)** | - | Understanding changes | What was improved and why |
-
-**👉 Start here**: [`INDEX.md`](INDEX.md) - Your guide to navigating all documentation
-
-## 🌐 Official Python Documentation
-
-- [Extending Python with C or C++](https://docs.python.org/3/extending/extending.html)
+- [Python/C API Documentation](https://docs.python.org/3/c-api/)
+- [Extending and Embedding Python](https://docs.python.org/3/extending/)
+- [Python Extension Patterns](https://pythonextensionpatterns.readthedocs.io/)
 - [Defining Extension Types: Tutorial](https://docs.python.org/3/extending/newtypes_tutorial.html)
-- [Defining Extension Types: Assorted Topics](https://docs.python.org/3/extending/newtypes.html)
-- [Python/C API Reference Manual](https://docs.python.org/3/c-api/index.html)
+
+## Contributing
+
+Feel free to add more examples and improve documentation!
+
+## License
+
+This project is provided as educational material for learning Python extensions.
